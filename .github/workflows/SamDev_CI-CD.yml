@@ -60,4 +60,4 @@ jobs:
 
       - name: Deploy Code
         run: |
-          ssh id_rsa "cd /Odoo16/Test-Odoo-CICD && git pull origin main && systemctl restart odoo"
+          ssh CICD "cd /Odoo16/Test-Odoo-CICD && git pull origin main && systemctl restart odoo"
