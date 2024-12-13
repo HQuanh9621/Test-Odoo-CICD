@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_th_internal_transfer,access_th_internal_transfer,model_th_internal_transfer,base.group_user,1,1,1,1
+access_th_internal_transfer_detail,access_th_internal_transfer_detail,model_th_internal_transfer_detail,base.group_user,1,1,1,1

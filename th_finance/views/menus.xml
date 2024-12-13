@@ -1,0 +1,12 @@
+<odoo>
+
+    <!--    Root Menu Giao dịch nội bộ-->
+
+    <menuitem id="th_internal_transfer_menu"
+              name="Chuyển quỹ nội bộ"
+              parent="account_accountant.menu_accounting"
+              action="th_internal_transfer_action"
+              groups="account.group_account_user"
+              sequence="10"/>
+
+</odoo>
