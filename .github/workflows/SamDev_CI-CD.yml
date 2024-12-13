@@ -37,7 +37,7 @@ jobs:
 
       - name: Set Up Odoo
         run: |
-          pip install -r /Odoo16/Test-Odoo-CICD/requirements.txt
+          pip install -r requirements.txt
           echo "[options]" > odoo.conf
           echo "db_host = localhost" >> odoo.conf
           echo "db_user = odoo" >> odoo.conf
