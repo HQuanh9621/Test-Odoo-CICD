@@ -1,0 +1,63 @@
+name: SamDev CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup-and-test:
+    name: Setup and Test SamDev
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Required Packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-contrib libpq-dev build-essential python3-dev
+          python3 -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Configure PostgreSQL
+        run: |
+          sudo service postgresql start
+          sudo -u postgres psql -c "CREATE USER odoo WITH SUPERUSER PASSWORD 'odoo';"
+          sudo -u postgres psql -c "CREATE DATABASE odoo OWNER odoo;"
+
+      - name: Set Up Odoo
+        run: |
+          pip install -r odoo/requirements.txt
+          echo "[options]" > odoo.conf
+          echo "db_host = localhost" >> odoo.conf
+          echo "db_user = odoo" >> odoo.conf
+          echo "db_password = odoo" >> odoo.conf
+          echo "addons_path = addons,custom_addons" >> odoo.conf
+
+      - name: Run Tests
+        run: |
+          python3 odoo/odoo-bin --config=odoo.conf --test-enable --stop-after-init --log-level=test
+
+  deploy:
+    name: Deploy to Production
+    needs: setup-and-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Code
+        run: |
+          ssh HQuanh9621@production-server "cd /Odoo16/Test-Odoo-CICD && git pull origin main && systemctl restart odoo"
